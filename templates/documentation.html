@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="navbar">
+        <a href="{{ url_for('index') }}">Home</a>
+        <a href="{{ url_for('documentation') }}">Documentation</a>
+        <a href="{{ url_for('contact') }}">Contact</a>
+    </div>
+
+    <div class="container">
+        <h1>Documentation</h1>
+        <div class="card">
+            <h2>How Our Apple Classifier Works</h2>
+            <p>
+                Welcome to the documentation for our Apple Classifier! Here’s how it works, step by step:
+            </p>
+            <p>
+                <strong>1. Understanding the Apple Classifier:</strong><br>
+                Our apple classifier is a smart computer program designed to identify different types of apples by looking at their pictures.
+                It uses a technology called a "neural network," which is a kind of artificial intelligence that learns from examples.
+            </p>
+            <p>
+                <strong>2. What is a Neural Network?</strong><br>
+                Think of a neural network like a very complicated pattern-recognizer. Just like how we learn to recognize apples by looking at many examples,
+                the neural network learns to identify apples by being shown many apple images and learning the differences between them.
+            </p>
+            <p>
+                <strong>3. The VGG16 Model:</strong><br>
+                We use a specific type of neural network called VGG16. This model was originally trained on a huge collection of images from the internet (known as ImageNet)
+                to recognize a wide variety of objects. We then fine-tuned it with a smaller set of apple images to make it better at recognizing different types of apples.
+            </p>
+            <p>
+                <strong>4. Training the Model:</strong><br>
+                Training the model means teaching it how to recognize apple types by showing it many pictures of apples. Each picture is labeled with the type of apple it shows.
+                Over time, the model learns what each apple type looks like and gets better at identifying them.
+            </p>
+            <p>
+                <strong>5. How We Process Your Image:</strong><br>
+                When you upload an apple picture, the classifier first resizes the image to a standard size that the model expects. It then adjusts the image so that it’s in the right format for the model to understand.
+            </p>
+            <p>
+                <strong>6. Making a Prediction:</strong><br>
+                After processing the image, the model looks at it and uses what it has learned to guess which type of apple it is. It then provides a prediction and tells you how confident it is in its guess.
+            </p>
+            <p>
+                <strong>7. Results:</strong><br>
+                Finally, you will see the prediction along with the confidence level, which is a percentage showing how sure the model is about its guess.
+            </p>
+            <p>
+                We hope this explanation helps you understand how our apple classifier works. If you have any questions, feel free to contact us through our <a href="{{ url_for('contact') }}">Contact page</a>.
+            </p>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2024 Apple Predictor. All rights reserved.
+    </footer>
+</body>
+</html>

@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        .navbar {
+            background-color: #333;
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .navbar a {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .navbar a:hover {
+            background-color: #555;
+            border-radius: 4px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .card {
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #555;
+            font-size: 1.75em;
+            margin-bottom: 15px;
+        }
+
+        p {
+            color: #777;
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .preview {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .preview img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .button-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .go-back-button {
+            background: linear-gradient(45deg, #4caf50, #2e7d32);
+            color: #ffffff;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1.2em;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s, box-shadow 0.3s;
+            display: inline-block;
+        }
+
+        .go-back-button:hover {
+            background: linear-gradient(45deg, #66bb6a, #1b5e20);
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        footer {
+            text-align: center;
+            padding: 15px;
+            background-color: #333;
+            color: #ffffff;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 600px) {
+            .navbar a {
+                display: block;
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+
+            .container {
+                margin: 20px;
+                padding: 15px;
+            }
+
+            .go-back-button {
+                width: 100%;
+            }
+        }
+
+        .accordion {
+            background-color: #e0e0e0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .accordion-header {
+            background-color: #d5d5d5;
+            padding: 15px;
+            cursor: pointer;
+            border-bottom: 1px solid #ddd;
+            font-weight: bold;
+        }
+
+        .accordion-content {
+            display: none;
+            padding: 15px;
+            border-top: 1px solid #ddd;
+        }
+
+        .accordion-content p {
+            margin: 0;
+        }
+
+        .accordion-header.active {
+            background-color: #c0c0c0;
+        }
+
+        .accordion-content.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="{{ url_for('index') }}">Home</a>
+        <a href="{{ url_for('documentation') }}">Documentation</a>
+        <a href="{{ url_for('contact') }}">Contact</a>
+    </div>
+
+    <div class="container">
+        <h1>Prediction Result</h1>
+        <div class="card">
+            <h2>Prediction Details</h2>
+            <p>
+                <strong>Filename:</strong> {{ filename }}<br>
+                <strong>Predicted Class:</strong> <span id="predicted_class">{{ predicted_class }}</span><br>
+                <strong>Confidence:</strong> {{ confidence }}<br>
+            </p>
+            <button class="go-back-button" onclick="window.location.href='{{ url_for('index') }}'">Go Back</button>
+            <div class="preview">
+                <img src="{{ url_for('static', filename='uploads/' + filename) }}" alt="Uploaded Image">
+            </div>
+
+            <!-- Accordion for detailed information -->
+            <div class="accordion">
+                <div class="accordion-header">Fertilizers and Nutrients</div>
+                <div class="accordion-content" id="fertilizers-and-nutrients">
+                    <!-- Content will be injected here by JavaScript -->
+                </div>
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-header">Pest and Disease Control</div>
+                <div class="accordion-content" id="pest-and-disease-control">
+                    <!-- Content will be injected here by JavaScript -->
+                </div>
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-header">Best Time to Plant</div>
+                <div class="accordion-content" id="best-time-to-plant">
+                    <!-- Content will be injected here by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2024 Apple Predictor. All rights reserved.
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var acc = document.getElementsByClassName("accordion-header");
+            for (var i = 0; i < acc.length; i++) {
+                acc[i].addEventListener("click", function () {
+                    this.classList.toggle("active");
+                    var panel = this.nextElementSibling;
+                    if (panel.style.display === "block") {
+                        panel.style.display = "none";
+                    } else {
+                        panel.style.display = "block";
+                    }
+                });
+            }
+
+            function displayInfo(predictedClass) {
+                console.log("Predicted Class:", predictedClass); // Debugging line
+                var info = {
+                    "GalaApples": {
+                        "Fertilizers and Nutrients": `
+                            <p><strong>Soil Requirements:</strong> Gala apples thrive in well-draining, loamy soil with a slightly acidic to neutral pH (6.0 to 7.0). Proper soil drainage is crucial to prevent root diseases.</p>
+                            <p><strong>Organic Fertilizers:</strong></p>
+                            <ul>
+                                <li><strong>Composted Manure:</strong> Provides a balanced mix of nutrients and improves soil structure. Apply in early spring before the growing season.</li>
+                                <li><strong>Bone Meal:</strong> Promotes strong root growth and fruiting. Apply at planting or as a top-dressing in early spring.</li>
+                            </ul>
+                            <p><strong>Synthetic Fertilizers:</strong></p>
+                            <ul>
+                                <li><strong>Balanced Fertilizer (10-10-10 or 12-12-12):</strong> Supports overall tree health and fruit development. Apply in early spring.</li>
+                            </ul>
+                            <p><strong>Additional Nutrients:</strong></p>
+                            <ul>
+                                <li><strong>Calcium (Ca):</strong> Enhances fruit quality and strengthens cell walls. Apply calcium nitrate as needed.</li>
+                                <li><strong>Magnesium (Mg):</strong> Important for photosynthesis and leaf health. Use magnesium sulfate if deficiency symptoms appear.</li>
+                            </ul>
+                        `,
+                        "Pest and Disease Control": `
+                            <p><strong>Common Pests:</strong></p>
+                            <ul>
+                                <li><strong>Apple Maggot:</strong> Use bait traps and insecticides to control.</li>
+                                <li><strong>Codling Moth:</strong> Apply pheromone traps and insecticides as needed.</li>
+                            </ul>
+                            <p><strong>Common Diseases:</strong></p>
+                            <ul>
+                                <li><strong>Apple Scab:</strong> Use fungicides and remove affected leaves.</li>
+                                <li><strong>Powdery Mildew:</strong> Apply sulfur or other fungicides and improve air circulation.</li>
+                            </ul>
+                        `,
+                        "Best Time to Plant": `
+                            <p>Gala apples should be planted in early spring, as soon as the soil is workable. Alternatively, late fall can also be a good time to plant if the weather permits.</p>
+                        `
+                    },
+                    "GrannySmith": {
+                        "Fertilizers and Nutrients": `
+                            <p><strong>Soil Requirements:</strong> Granny Smith apples prefer well-draining, sandy loam to loamy soil with a pH of 6.0 to 6.5. Adequate drainage is essential to avoid root rot.</p>
+                            <p><strong>Organic Fertilizers:</strong></p>
+                            <ul>
+                                <li><strong>Chicken Manure:</strong> High in nitrogen, which promotes vigorous growth and fruit development. Apply in early spring.</li>
+                                <li><strong>Seaweed Extract:</strong> Provides essential micronutrients and improves overall tree health. Use as a foliar spray or soil drench.</li>
+                            </ul>
+                            <p><strong>Synthetic Fertilizers:</strong></p>
+                            <ul>
+                                <li><strong>High-Nitrogen Fertilizer (20-10-10):</strong> Supports leafy growth and overall tree vigor. Apply in early spring and again in mid-summer.</li>
+                            </ul>
+                            <p><strong>Additional Nutrients:</strong></p>
+                            <ul>
+                                <li><strong>Iron (Fe):</strong> Helps prevent chlorosis and promotes healthy foliage. Apply iron chelate as needed.</li>
+                                <li><strong>Potassium (K):</strong> Enhances fruit quality and disease resistance. Use potassium sulfate if required.</li>
+                            </ul>
+                        `,
+                        "Pest and Disease Control": `
+                            <p><strong>Common Pests:</strong></p>
+                            <ul>
+                                <li><strong>Apple Scab:</strong> Use fungicides and remove infected leaves.</li>
+                                <li><strong>Codling Moth:</strong> Apply traps and insecticides as needed.</li>
+                            </ul>
+                            <p><strong>Common Diseases:</strong></p>
+                            <ul>
+                                <li><strong>Powdery Mildew:</strong> Apply sulfur-based fungicides and maintain good air circulation.</li>
+                                <li><strong>Apple Rust:</strong> Use appropriate fungicides and remove infected branches.</li>
+                            </ul>
+                        `,
+                        "Best Time to Plant": `
+                            <p>Granny Smith apples are best planted in early spring after the last frost, or in late fall if the ground is not frozen.</p>
+                        `
+                    },
+                    "RoyalApple": {
+                        "Fertilizers and Nutrients": `
+                            <p><strong>Soil Requirements:</strong> Royal Apples grow best in well-draining, fertile soil with a pH between 6.0 and 7.0. Good soil drainage is important to avoid waterlogging.</p>
+                            <p><strong>Organic Fertilizers:</strong></p>
+                            <ul>
+                                <li><strong>Composted Leaf Mold:</strong> Enriches soil with organic matter and nutrients. Apply in early spring or fall.</li>
+                                <li><strong>Alfalfa Meal:</strong> Provides nitrogen and trace elements beneficial for growth. Incorporate into the soil in early spring.</li>
+                            </ul>
+                            <p><strong>Synthetic Fertilizers:</strong></p>
+                            <ul>
+                                <li><strong>Controlled-Release Fertilizer (14-14-14):</strong> Provides balanced nutrition over a longer period. Use in early spring.</li>
+                            </ul>
+                            <p><strong>Additional Nutrients:</strong></p>
+                            <ul>
+                                <li><strong>Phosphorus (P):</strong> Promotes root development and flowering. Apply superphosphate as needed.</li>
+                                <li><strong>Calcium (Ca):</strong> Improves fruit firmness and overall health. Use calcium chloride if required.</li>
+                            </ul>
+                        `,
+                        "Pest and Disease Control": `
+                            <p><strong>Common Pests:</strong></p>
+                            <ul>
+                                <li><strong>Apple Maggot:</strong> Use traps and insecticides to manage.</li>
+                                <li><strong>Spider Mites:</strong> Apply miticides and maintain proper watering.</li>
+                            </ul>
+                            <p><strong>Common Diseases:</strong></p>
+                            <ul>
+                                <li><strong>Fire Blight:</strong> Remove affected branches and apply appropriate fungicides.</li>
+                                <li><strong>Apple Scab:</strong> Use fungicides and remove fallen leaves.</li>
+                            </ul>
+                        `,
+                        "Best Time to Plant": `
+                            <p>Plant Royal Apples in early spring, as soon as the soil can be worked, or in late fall before the ground freezes.</p>
+                        `
+                    },
+                    "NewtonPipping": {
+                        "Fertilizers and Nutrients": `
+                            <p><strong>Soil Requirements:</strong> Newton Pippin apples thrive in well-draining, fertile soil with a slightly acidic to neutral pH (6.0 to 7.0). Ensure good drainage to prevent root diseases.</p>
+                            <p><strong>Organic Fertilizers:</strong></p>
+                            <ul>
+                                <li><strong>Well-Rotted Manure:</strong> Adds essential nutrients and improves soil structure. Apply in early spring or fall.</li>
+                                <li><strong>Green Manure:</strong> Incorporate cover crops like clover or vetch into the soil to add organic matter and nutrients.</li>
+                            </ul>
+                            <p><strong>Synthetic Fertilizers:</strong></p>
+                            <ul>
+                                <li><strong>Balanced Fertilizer (10-10-10):</strong> Supports tree health and fruit production. Apply in early spring.</li>
+                            </ul>
+                            <p><strong>Additional Nutrients:</strong></p>
+                            <ul>
+                                <li><strong>Magnesium (Mg):</strong> Important for chlorophyll production. Apply Epsom salts if symptoms of deficiency appear.</li>
+                                <li><strong>Iron (Fe):</strong> Helps prevent yellowing of leaves. Apply iron chelate as needed.</li>
+                            </ul>
+                        `,
+                        "Pest and Disease Control": `
+                            <p><strong>Common Pests:</strong></p>
+                            <ul>
+                                <li><strong>Codling Moth:</strong> Use traps and insecticides to control.</li>
+                                <li><strong>Apple Aphids:</strong> Apply insecticidal soap or neem oil.</li>
+                            </ul>
+                            <p><strong>Common Diseases:</strong></p>
+                            <ul>
+                                <li><strong>Apple Rust:</strong> Use appropriate fungicides and remove infected leaves.</li>
+                                <li><strong>Scab:</strong> Apply fungicides and maintain good garden hygiene.</li>
+                            </ul>
+                        `,
+                        "Best Time to Plant": `
+                            <p>Newton Pippin apples are best planted in early spring, after the last frost, or in late fall before the ground freezes.</p>
+                        `
+                    },
+                    "GoldenApples": {
+                        "Fertilizers and Nutrients": `
+                            <p><strong>Soil Requirements:</strong> Golden Delicious apples prefer slightly acidic soil with a pH between 6.0 and 6.5. Ensure well-draining soil to prevent root rot.</p>
+                            <p><strong>Organic Fertilizers:</strong></p>
+                            <ul>
+                                <li><strong>Composted Cow Manure:</strong> Rich in nitrogen, phosphorus, and potassium. Provides a steady release of nutrients and improves soil structure.</li>
+                                <li><strong>Fish Emulsion:</strong> Provides a quick nitrogen boost and contains trace minerals beneficial for plant growth.</li>
+                            </ul>
+                            <p><strong>Synthetic Fertilizers:</strong></p>
+                            <ul>
+                                <li><strong>Balanced Fertilizer (10-10-10 or 12-12-12):</strong> Provides equal amounts of nitrogen, phosphorus, and potassium. Use in early spring for new growth.</li>
+                            </ul>
+                            <p><strong>Additional Nutrients:</strong></p>
+                            <ul>
+                                <li><strong>Calcium (Ca):</strong> Strengthens cell walls and improves fruit quality. Apply calcium nitrate as a foliar spray in early summer.</li>
+                                <li><strong>Zinc (Zn):</strong> Regulates plant hormones and promotes healthy growth. Use zinc sulfate as a foliar spray in early spring.</li>
+                            </ul>
+                        `,
+                        "Pest and Disease Control": `
+                            <p><strong>Common Pests:</strong></p>
+                            <ul>
+                                <li><strong>Apple Maggot:</strong> Use bait traps and insecticides to control.</li>
+                                <li><strong>Codling Moth:</strong> Apply pheromone traps and insecticides. Maintain orchard cleanliness.</li>
+                            </ul>
+                            <p><strong>Diseases:</strong></p>
+                            <ul>
+                                <li><strong>Apple Scab:</strong> Apply fungicides in early spring and remove fallen leaves.</li>
+                                <li><strong>Powdery Mildew:</strong> Use fungicides and ensure good air circulation around trees.</li>
+                            </ul>
+                            <p><strong>Integrated Pest Management (IPM):</strong> Regularly monitor your apple trees, practice crop rotation, and employ biological controls where possible.</p>
+                        `,
+                        "Best Time to Plant": `
+                            <p><strong>Spring:</strong> Ideal for planting in early spring after the last frost. Allows the tree to establish before summer heat.</p>
+                            <p><strong>Fall:</strong> Can also be planted in late fall before the first frost. Ensure the tree has adequate time to establish roots before the ground freezes.</p>
+                            <p><strong>Planting Tips:</strong></p>
+                            <ul>
+                                <li><strong>Location:</strong> Choose a sunny spot with good air circulation.</li>
+                                <li><strong>Soil Preparation:</strong> Test and amend soil as necessary. Plant in well-draining soil to avoid waterlogging.</li>
+                            </ul>
+                        `
+                    },
+                    "FujiApples": {
+                        "Fertilizers and Nutrients": `
+                            <p><strong>Soil Requirements:</strong> Fuji apples prefer well-draining, loamy soil with a pH between 6.0 and 7.0. Good drainage is essential to prevent root rot and other issues.</p>
+                            <p><strong>Organic Fertilizers:</strong></p>
+                            <ul>
+                                <li><strong>Manure Compost:</strong> Provides a steady release of nutrients and improves soil texture. Apply in early spring.</li>
+                                <li><strong>Blood Meal:</strong> High in nitrogen, promoting vigorous growth and fruit production. Use in early spring.</li>
+                            </ul>
+                            <p><strong>Synthetic Fertilizers:</strong></p>
+                            <ul>
+                                <li><strong>High-Potassium Fertilizer (10-5-15):</strong> Enhances fruit quality and disease resistance. Apply in early spring.</li>
+                            </ul>
+                            <p><strong>Additional Nutrients:</strong></p>
+                            <ul>
+                                <li><strong>Calcium (Ca):</strong> Strengthens fruit and tree structure. Use calcium nitrate or calcium chloride as needed.</li>
+                                <li><strong>Phosphorus (P):</strong> Encourages strong root development. Apply bone meal if necessary.</li>
+                            </ul>
+                        `,
+                        "Pest and Disease Control": `
+                            <p><strong>Common Pests:</strong></p>
+                            <ul>
+                                <li><strong>Apple Coddling Moth:</strong> Use pheromone traps and insecticides.</li>
+                                <li><strong>Spider Mites:</strong> Apply miticides and ensure adequate watering.</li>
+                            </ul>
+                            <p><strong>Common Diseases:</strong></p>
+                            <ul>
+                                <li><strong>Apple Scab:</strong> Apply fungicides and remove infected leaves.</li>
+                                <li><strong>Powdery Mildew:</strong> Use sulfur-based fungicides and maintain proper air circulation.</li>
+                            </ul>
+                        `,
+                        "Best Time to Plant": `
+                            <p>Fuji apples should be planted in early spring after the last frost, or in late fall before the ground freezes.</p>
+                        `
+                    }
+                };
+
+                var content = info[predictedClass];
+                if (content) {
+                    document.getElementById('fertilizers-and-nutrients').innerHTML = content['Fertilizers and Nutrients'];
+                    document.getElementById('pest-and-disease-control').innerHTML = content['Pest and Disease Control'];
+                    document.getElementById('best-time-to-plant').innerHTML = content['Best Time to Plant'];
+                } else {
+                    console.error("Information not available for predicted class:", predictedClass);
+                }
+            }
+
+            // Call displayInfo with the predicted class to populate the accordion content
+            var predictedClass = document.getElementById('predicted_class').textContent.trim();
+            displayInfo(predictedClass);
+        });
+    </script>
+</body>
+</html>
