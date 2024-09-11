@@ -9,7 +9,7 @@ import os
 app = Flask(__name__)
 
 # Load the model and class names
-model = load_model('apple_classifier_mobilenetv2.h5')
+model = load_model('apple_classifier_mobilenetv.h5')
 class_names = np.load('class_names2.npy')
 
 # Configure upload folder
