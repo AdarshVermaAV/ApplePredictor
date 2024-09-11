@@ -2,18 +2,17 @@ from flask import Flask, request, render_template, redirect, url_for
 from werkzeug.utils import secure_filename
 import numpy as np
 from PIL import Image
-import tensorflow as tf
-from keras.models import load_model
-from keras.applications.vgg16 import preprocess_input
+from tensorflow.keras.models import load_model
+from tensorflow.keras.applications.mobilenet_v2 import preprocess_input  # Import for MobileNetV2
 import os
-
 
 app = Flask(__name__)
 
+# Load the model and class names
+model = load_model('apple_classifier_mobilenetv.h5')
+class_names = np.load('class_names2.npy')
 
-model = load_model('apple_classifier_vgg16.h5')
-class_names = np.load('class_names.npy')
-
+# Configure upload folder
 UPLOAD_FOLDER = 'static/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
@@ -38,7 +37,7 @@ def preprocess_image(image):
     # Expand dimensions to match the model input
     image_array = np.expand_dims(image_array, axis=0)
 
-    # Preprocess the image for VGG16
+    # Preprocess the image for MobileNetV2
     image_array = preprocess_input(image_array)
     return image_array
 
@@ -46,7 +45,7 @@ def preprocess_image(image):
 def index():
     return render_template('index.html')
 
-@app.route('/upload', methods=['POST'])
+@app.route('/uploads', methods=['POST'])
 def upload_file():
     if 'file' not in request.files:
         return redirect(request.url)
@@ -96,4 +95,4 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'jpg', 'jpeg', 'png'}
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
